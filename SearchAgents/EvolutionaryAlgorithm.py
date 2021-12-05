@@ -1,7 +1,7 @@
 from random import betavariate
 from utils import EvolutionaryAlgorithm, Drawer
 
-solution = EvolutionaryAlgorithm(50)
+solution = EvolutionaryAlgorithm(2000, 50)
 best = solution.best()
 print("Initial state")
 print("Number of sheets: {}".format(best.f()))
@@ -11,7 +11,7 @@ print("Average white cells: {}".format(best.i()))
 print("Number white cells: {}".format(best.j()))
 print("Fitness: {}".format(best.fitness()))
 
-solution.findSolution(12)
+solution.findSolution(50)
 
 best = solution.best()
 print("Final state")

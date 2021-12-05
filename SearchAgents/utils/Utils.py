@@ -260,12 +260,20 @@ class Chromosome(BasicState):
     def mutate(self):
         for piece in self.pieces:
             probability = random.uniform(0, 1)
-            if probability < 0.125:
+            if probability < 0.05:
                 piece.moveNextSheet()
-            elif probability < 0.25:
+            elif probability < 0.15:
                 piece.movePreviousSheet()
-            elif probability < 0.3:
-                pass
+            elif probability < 0.18:
+                piece.moveUp()
+            elif probability < 0.21:
+                piece.moveDown()
+            elif probability < 0.24:
+                piece.moveRight()
+            elif probability < 0.27:
+                piece.moveLeft()
+            elif probability < 0.30:
+                piece.rotate()
 
     def  __gt__(self, other):
         return self.fitness() > other.fitness()
