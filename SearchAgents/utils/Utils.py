@@ -96,7 +96,13 @@ class RectangularPiece:
     
     def moveNextSheet(self):
         self.sheet += 1
-        
+
+    def __str__(self):
+        return "(x:{}, y:{}, w:{}, h:{}, r:{})".format(self.x, self.y, self.width, self.height, str(self.rotation))
+
+
+# -------------STATES-------------
+
 class BasicState:
     def __init__(self, pieces):
         self.pieces = pieces
@@ -143,8 +149,8 @@ class BasicState:
             cellsOutOfSheet += piece.area - cellsInsideTheSheet
         return cellsOutOfSheet
 
-    # White spaces
-    def i (self):
+    # Average White spaces
+    def i(self):
         sheets = self.getAsMatrix()
 
         whiteSpaces = 0
@@ -154,6 +160,24 @@ class BasicState:
                     if cell == 0:
                         whiteSpaces += (18 - ((idxr + idxc))) / 10
         return whiteSpaces
+
+    # White spaces
+    def j(self):
+        sheets = self.getAsMatrix()
+
+        whiteSpaces = 0
+        for sheet in sheets:
+            for idxr, row in enumerate(sheet):
+                for idxc, cell in enumerate(row):
+                    if cell == 0:
+                        whiteSpaces += 1
+        return whiteSpaces
+
+    def __str__(self):
+        value = "["
+        for piece in self.pieces:
+            value += str(piece) + ", "
+        return value + "]"
 
 class State(BasicState):
     def getRandomNeighbor(self):
@@ -208,11 +232,46 @@ class State(BasicState):
         return neighbors
 
     def heuristic(self):
-        return (self.f() ** 3) + ((self.g() + self.h()) ** 2) + self.i()
+        return (self.f() ** 3) + ((self.g() + self.h()) ** 2) + (self.i() * 2.5) + self.j()
 
 class Chromosome(BasicState):
     def fitness(self):
-        pass
+        return (self.j() - (self.f() * 100)) + (774932 / (((self.g() + self.h()) ** 2) + (self.i() * 2.5)))
+
+    def merge(self, chromosome):
+        newCromosomes = []
+
+        start = 0
+        middle = int(len(self.pieces) / 2)
+        end = len(self.pieces)
+
+        newPieces = []
+        newPieces.extend(copy.deepcopy(self.pieces[start:middle]))
+        newPieces.extend(copy.deepcopy(chromosome.pieces[middle:end]))
+        newCromosomes.append(Chromosome(newPieces))
+
+        newPieces = []
+        newPieces.extend(copy.deepcopy(chromosome.pieces[start:middle]))
+        newPieces.extend(copy.deepcopy(self.pieces[middle:end]))
+        newCromosomes.append(Chromosome(newPieces))
+
+        return newCromosomes
+
+    def mutate(self):
+        for piece in self.pieces:
+            probability = random.uniform(0, 1)
+            if probability < 0.125:
+                piece.moveNextSheet()
+            elif probability < 0.25:
+                piece.movePreviousSheet()
+            elif probability < 0.3:
+                pass
+
+    def  __gt__(self, other):
+        return self.fitness() > other.fitness()
+
+    def __eq__(self,other):
+        return self.fitness() == other.fitness()
 
 class Drawer:
     def __init__(self, cellSize = 50):

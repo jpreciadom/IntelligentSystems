@@ -1,6 +1,5 @@
 from numpy import mat
 from .Utils import State, generateRandomPieces, piecesDimensions
-from .HillClimbing import HillClimbing
 import random
 import math
 
