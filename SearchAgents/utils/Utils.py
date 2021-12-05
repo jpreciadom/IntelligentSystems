@@ -156,6 +156,26 @@ class BasicState:
         return whiteSpaces
 
 class State(BasicState):
+    def getRandomNeighbor(self):
+        state = State(copy.deepcopy(self.pieces))
+        piece = state.pieces[random.randint(0, 9)]
+        action = random.randint(0, 6)
+        if action == 0:
+            piece.moveUp()
+        elif action == 1:
+            piece.moveLeft()
+        elif action == 2:
+            piece.moveRight()
+        elif action == 3:
+            piece.moveDown()
+        elif action == 4:
+            piece.rotate()
+        elif action == 5:
+            piece.movePreviousSheet()
+        else:
+            piece.moveNextSheet()
+        return state
+
     def findNeighbors(self):
         neighbors = []
         for idx, piece in enumerate(self.pieces):
@@ -197,8 +217,8 @@ class Chromosome(BasicState):
 class Drawer:
     def __init__(self, cellSize = 50):
         self.cellSize = cellSize
-        self.sheetSize = self.cellSize * 10
-        self.canvas = Canvas(width=(32 * self.cellSize), height=(15 * self.cellSize), background='white')
+        self.sheetSize = cellSize * 10
+        self.canvas = Canvas(width=(32 * cellSize), height=(21.5 * cellSize), background='white')
         self.canvas.pack(expand=YES, fill=BOTH)
         self.colors = [
             '#0000FF',
@@ -219,8 +239,8 @@ class Drawer:
         sheets = []
         for idx in range (0, state.f()):
             sheetCoordinates = (
-                (25 * ((idx % sheetsPerRow) + 1)) + (self.sheetSize * (idx % sheetsPerRow)),
-                (25 * (int(idx / sheetsPerRow) + 1) + self.sheetSize * int(idx / sheetsPerRow))
+                ((self.cellSize / 2) * ((idx % sheetsPerRow) + 1)) + (self.sheetSize * (idx % sheetsPerRow)),
+                ((self.cellSize / 2) * (int(idx / sheetsPerRow) + 1) + self.sheetSize * int(idx / sheetsPerRow))
             )
             self.canvas.create_rectangle(
                 sheetCoordinates[0],
