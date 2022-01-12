@@ -2,8 +2,11 @@
 The source code for this example was taken from: https://www.geeksforgeeks.org/decision-tree-implementation-python/
 
 **Author:** Abhishek Sharma
+
 **Title:** Python | Decision tree implementation
+
 **Type:** Source code
+
 **Web address:** https://www.geeksforgeeks.org/decision-tree-implementation-python/
 
 # Packages
