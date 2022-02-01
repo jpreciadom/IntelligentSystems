@@ -1,0 +1,33 @@
+digraph Tree {
+node [shape=box, style="rounded", color="black", fontname="helvetica"] ;
+edge [fontname="helvetica"] ;
+0 [label="Right-Weight <= 2.5\ngini = 0.6\nsamples = 437\nvalue = [36, 203, 198]\nclass = L"] ;
+1 [label="Left-Distance <= 1.5\ngini = 0.4\nsamples = 165\nvalue = [13, 117, 35]\nclass = L"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="Right-Distance <= 2.5\ngini = 0.5\nsamples = 27\nvalue = [4, 6, 17]\nclass = R"] ;
+1 -> 2 ;
+3 [label="gini = 0.7\nsamples = 12\nvalue = [4, 5, 3]\nclass = L"] ;
+2 -> 3 ;
+4 [label="gini = 0.1\nsamples = 15\nvalue = [0, 1, 14]\nclass = R"] ;
+2 -> 4 ;
+5 [label="Left-Weight <= 1.5\ngini = 0.3\nsamples = 138\nvalue = [9, 111, 18]\nclass = L"] ;
+1 -> 5 ;
+6 [label="gini = 0.6\nsamples = 25\nvalue = [5, 9, 11]\nclass = R"] ;
+5 -> 6 ;
+7 [label="gini = 0.2\nsamples = 113\nvalue = [4, 102, 7]\nclass = L"] ;
+5 -> 7 ;
+8 [label="Right-Distance <= 2.5\ngini = 0.5\nsamples = 272\nvalue = [23, 86, 163]\nclass = R"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="Left-Weight <= 1.5\ngini = 0.6\nsamples = 110\nvalue = [11, 62, 37]\nclass = L"] ;
+8 -> 9 ;
+10 [label="gini = 0.4\nsamples = 27\nvalue = [3, 3, 21]\nclass = R"] ;
+9 -> 10 ;
+11 [label="gini = 0.4\nsamples = 83\nvalue = [8, 59, 16]\nclass = L"] ;
+9 -> 11 ;
+12 [label="Left-Weight <= 3.5\ngini = 0.4\nsamples = 162\nvalue = [12, 24, 126]\nclass = R"] ;
+8 -> 12 ;
+13 [label="gini = 0.1\nsamples = 100\nvalue = [3, 4, 93]\nclass = R"] ;
+12 -> 13 ;
+14 [label="gini = 0.6\nsamples = 62\nvalue = [9, 20, 33]\nclass = R"] ;
+12 -> 14 ;
+}

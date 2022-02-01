@@ -8,6 +8,7 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import export_graphviz
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 
@@ -36,8 +37,10 @@ def splitdataset(balance_data):
 	# Splitting the dataset into train and test
 	X_train, X_test, y_train, y_test = train_test_split(
 	X, Y, test_size = 0.3, random_state = 100)
+
+	feature_names = ['Left-Weight', 'Left-Distance', 'Right-Weight', 'Right-Distance']
 	
-	return X, Y, X_train, X_test, y_train, y_test
+	return feature_names, X, Y, X_train, X_test, y_train, y_test
 	
 # Function to perform training with giniIndex.
 def train_using_gini(X_train, X_test, y_train):
@@ -89,7 +92,7 @@ def main():
 	
 	# Building Phase
 	data = importdata()
-	X, Y, X_train, X_test, y_train, y_test = splitdataset(data)
+	feature_names, X, Y, X_train, X_test, y_train, y_test = splitdataset(data)
 	clf_gini = train_using_gini(X_train, X_test, y_train)
 	clf_entropy = tarin_using_entropy(X_train, X_test, y_train)
 	
@@ -105,6 +108,9 @@ def main():
 	y_pred_entropy = prediction(X_test, clf_entropy)
 	cal_accuracy(y_test, y_pred_entropy)
 	
+	export_graphviz(clf_gini, out_file = './gini_tree.dot', feature_names=feature_names, rounded = True, precision = 1, class_names=['B', 'L', 'R'])
+	export_graphviz(clf_entropy, out_file = './entropy_tree.dot', feature_names=feature_names, rounded = True, precision = 1, class_names=['B', 'L', 'R'])
+
 	
 # Calling main function
 if __name__=="__main__":
