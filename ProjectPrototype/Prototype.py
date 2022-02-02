@@ -1,10 +1,6 @@
-from calendar import month
-from black import out
-from numpy import fmax
 import pandas as pd
 import datetime
 import os
-import re
 
 outputFilePath = "output/{}.csv"
 
@@ -44,7 +40,7 @@ def getTargetStations():
     targetStations = targetStations.set_index('Estaciones_Objetivo')
     return targetStations.index.tolist()
 
-def setOutputDataFrame(date, stationsList, interval = 1339):
+def setOutputDataFrame(date, stationsList, interval = 1440):
     columns = ['Interval_Start', 'Interval_End']
     columns.extend(stationsList)
 
