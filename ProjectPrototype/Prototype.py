@@ -1,3 +1,4 @@
+from calendar import month
 from black import out
 from numpy import fmax
 import pandas as pd
@@ -7,21 +8,35 @@ import re
 
 outputFilePath = "output/{}.csv"
 
-# Get the files names that have extension .input.csv
-def getDataFiles():
-    return [file for file in os.listdir('./') if re.match(r'.*\.input.csv$', file)]
-
 # Merge the data from all file into a pd.DataFrame
 def createDataFrame():
-    dataFiles = getDataFiles()
     dataFrames = []
 
-    for fileName in dataFiles:
-        dataFrames.append(pd.read_csv(fileName))
+    for fileName in os.listdir('./input'):
+        df = pd.read_csv('./input/{}'.format(fileName))
+        df = df.drop(columns=[
+            'Acceso_Estacion',
+            'Day_Group_Type',
+            'Dispositivo',
+            'Emisor',
+            'Fase',
+            'Hora_Pico_SN',
+            'Linea',
+            'Nombre_Perfil',
+            'Operador',
+            'Saldo_Despues_Transaccion',
+            'Saldo_Previo_a_Transaccion',
+            'Tipo_Tarifa',
+            'Tipo_Tarjeta',
+            'Valor',
+            'ID_Vehiculo',
+            'Ruta',
+            'Tipo_Vehiculo',
+            'Sistema'
+        ])
+        dataFrames.append(df)
 
     df = pd.concat(dataFrames, axis=0)
-    df = df.rename(columns={'Unnamed: 0': ''})
-    df = df.set_index(keys='')
     return df
 
 def getTargetStations():
@@ -41,11 +56,12 @@ def setOutputDataFrame(date, stationsList, interval = 1339):
     fh = int(interval / 60)
     hour = fh
     minutes = fm
-    calculatedDate = datetime.datetime.fromisoformat(date).replace()
+    calculatedDate = datetime.datetime.fromisoformat(date)
+    day = calculatedDate.day
 
-    while countedMinutes < 1440 - interval:
+    while countedMinutes <= 1440 - interval:
         row = [calculatedDate.isoformat()]
-        calculatedDate = calculatedDate.replace(hour=hour, minute=minutes)
+        calculatedDate = calculatedDate.replace(day=day, hour=hour, minute=minutes)
         row.append(calculatedDate.isoformat())
         row.extend([0 for i in range(len(stationsList))])
 
@@ -54,6 +70,9 @@ def setOutputDataFrame(date, stationsList, interval = 1339):
         if minutes >= 60:
             hour += int(minutes / 60)
             minutes = minutes % 60
+        if hour >= 24:
+            hour = hour % 24
+            day += 1
 
         countedMinutes += interval
 
@@ -74,7 +93,7 @@ def main():
     dates = df.value_counts(subset=['Fecha_Clearing']).to_frame().reset_index()['Fecha_Clearing'].values
 
     for day in dates:
-        outputDf = setOutputDataFrame(day, targetStations, 240)
+        outputDf = setOutputDataFrame(day, targetStations, 15)
 
         reg = df[df['Fecha_Clearing'] == day]
 
@@ -110,4 +129,3 @@ def main():
         outputDf.to_csv(outputFilePath.format(day))
 
 main()
-    
